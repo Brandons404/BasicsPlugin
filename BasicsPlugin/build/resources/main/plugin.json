@@ -1,0 +1,7 @@
+{
+  "name": "BasicsPlugin",
+  "author": "Brandons404",
+  "main": "basics.BasicsPlugin",
+  "description": "A plugin that adds some basic features.",
+  "version": 1.0
+}
