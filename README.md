@@ -11,8 +11,6 @@ Available commands:
 
 -pos: Shows the player's current Position as x,y
 
--tp <x> <y>: teleports the player to the position entered
-
 -sethome: Sets the home location for Everyone. For right now, this is available to all players, for when there is not an admin on.
 
 -home: teleports the player to the set home location
