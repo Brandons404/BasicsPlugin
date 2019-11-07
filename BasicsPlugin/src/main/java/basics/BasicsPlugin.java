@@ -14,37 +14,7 @@ import java.lang.*;
 
 
 
-public class BasicsPlugin extends Plugin{
-
-    public static String inArray(Player player, String arg) {
-        Array<Player> players = Vars.playerGroup.all();
-        for (Player other : players) {
-            if (other.name.contains(arg.toLowerCase())) {
-                player.setNet(other.x, other.y);
-                return "[green]Found player: " + other.name + "\n";
-            }
-        }
-        return "[scarlet]Sorry, it doesn't seem this player exists.. ";
-    }
-
-    private class HomeVariable {
-        private int x;
-        private int y;
-
-        private int getX() {
-            return this.x;
-        }
-        private int getY() {
-            return this.y;
-        }
-
-        private void setHome(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    HomeVariable home = new HomeVariable();
+public class BasicsPlugin extends Plugin {
 
     public BasicsPlugin(){
 
