@@ -4,7 +4,7 @@ import java.util.HashMap;
 import basics.Pair;
 
 public class Home {
-    Map<String, Pair> homes = new HashMap<>();
+    private Map<String, Pair> homes = new HashMap<>();
     public void setHome(String uuid, Pair pair) {
         homes.put(uuid, pair);
     }
