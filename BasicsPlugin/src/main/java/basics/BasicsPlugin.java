@@ -19,7 +19,7 @@ public class BasicsPlugin extends Plugin{
     public static String inArray(Player player, String arg) {
         Array<Player> players = Vars.playerGroup.all();
         for (Player other : players) {
-            if (other.name.contains(arg.toLowerCase())) {
+            if (other.name.toLowerCase().contains(arg.toLowerCase())) {
                 player.setNet(other.x, other.y);
                 return "[green]Found player: " + other.name + "\n";
             }
