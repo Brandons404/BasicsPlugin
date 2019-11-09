@@ -11,5 +11,8 @@ public class Home {
     public Pair getHome(String uuid) {
         return homes.getOrDefault(uuid, null);
     }
+    public void clear() {
+        homes.clear();
+    }
 }
 
