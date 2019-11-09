@@ -17,13 +17,12 @@ import java.lang.*;
 
 
 
-public class BasicsPlugin extends Plugin {
+public class BasicsPlugin extends Plugin{
     Home home;
-    
     public BasicsPlugin(){
         home = new Home();
         Events.on(GameOverEvent.class, event -> {
-            home.setHome(0, 0);
+            home.clear();
         });
 
         //Events.on(PlayerConnect.class, event -> {
