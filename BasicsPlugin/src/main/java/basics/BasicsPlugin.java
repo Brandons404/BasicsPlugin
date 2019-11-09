@@ -9,47 +9,20 @@ import io.anuke.mindustry.game.Team;
 import io.anuke.mindustry.gen.*;
 import io.anuke.mindustry.plugin.Plugin;
 import io.anuke.mindustry.Vars;
+import basics.Utils;
+import basics.Home;
+import basics.Pair;
 
 import java.lang.*;
 
 
 
 public class BasicsPlugin extends Plugin{
-
-    public static String inArray(Player player, String arg) {
-        Array<Player> players = Vars.playerGroup.all();
-        for (Player other : players) {
-            if (other.name.toLowerCase().contains(arg.toLowerCase())) {
-                player.setNet(other.x, other.y);
-                return "[green]Found player: " + other.name + "\n";
-            }
-        }
-        return "[scarlet]Sorry, it doesn't seem this player exists.. ";
-    }
-
-    private class HomeVariable {
-        private int x;
-        private int y;
-
-        private int getX() {
-            return this.x;
-        }
-        private int getY() {
-            return this.y;
-        }
-
-        private void setHome(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-    }
-
-    HomeVariable home = new HomeVariable();
-
+    Home home;
     public BasicsPlugin(){
-
+        home = new Home();
         Events.on(GameOverEvent.class, event -> {
-            home.setHome(0, 0);
+            home.clear();
         });
 
         //Events.on(PlayerConnect.class, event -> {
@@ -65,30 +38,58 @@ public class BasicsPlugin extends Plugin{
         });
 
         handler.<Player>register("pos","Relays your location as 'x , y'.", (args, player) -> {
-            player.sendMessage("location: " + (int)player.x + " " + (int)player.y);
+            player.sendMessage("location: " + player.x + " " + player.y);
         });
 
         handler.<Player>register("sethome", "Sets the home location.", (args, player) -> {
-            home.setHome((int)player.x, (int)player.y);
-            Call.sendMessage("Home set at: " + home.getX() +", " + home.getY());
+            Pair<Float, Float> loc = new Pair<>(player.getX(), player.getY());
+            home.setHome(player.getInfo().id, loc);
+            Call.sendMessage("Home set at: " + player.getX() +", " + player.getY());
         });
 
-        handler.<Player>register("home","Teleports you home", (args, player) -> {
-            if (home.getX() == 0 && home.getY() == 0) {
-                player.sendMessage("There's no home set! Set a home location with [green]/sethome[].");
-            } else {
-                player.setNet(home.getX(), home.getY());
-                player.set(home.getX(), home.getY());
+        handler.<Player>register("home", "<player>", "Teleports you home", (args, player) -> {
+            if(args.length() > 0) {
+                if(!(player.isAdmin())) {
+                    player.sendMessage("Only admins can teleport to other people's home!");
+                    return;
+                }
+                Player other;
+                for(Player p: Vars.playerGroup.all()) {
+                    if(p.name.toLowerCase().contains(args[0].toLowerCase()) {
+                     player other = p;
+                     break;
+                    }
+                }
+                if(other == null) {
+                    player.sendMessage("Player not found!");
+                    return;
+                }
+                Pair<Float, Float> loc = home.getHome(player.getInfo().id);
+                if(loc == null) {
+                    player.sendMessage("Player have not set a home yet!");
+                    return;
+                }
+                player.setNet(loc.getFirst(), loc.getSecond());
+                player.set(loc.getFirst(), loc.getSecond());
+                return;
             }
+            Pair<Float, Float> loc = home.getHome(player.getInfo().id);
+            if(loc == null) {
+                player.sendMessage("You have not yet set a home!");
+                return;
+            }
+            player.setNet(loc.getFirst(), loc.getSecond());
+            player.set(loc.getFirst(), loc.getSecond());
         });
 
         handler.<Player>register("gameover", "Immediately ends game if the player is an admin.", (args, player) -> {
             if(player.isAdmin) {
                 Call.sendMessage("[scarlet]Server: " + player.name + "[yellow] can't be patient and they skipped the map.");
                 Events.fire(new GameOverEvent(Team.crux));
-            } else {
-                player.sendMessage("[scarlet]You must be an admin to use this command.");
+                return;
             }
+            player.sendMessage("[scarlet]You must be an admin to use this command.");
+
         });
 
         handler.<Player>register("suicide", "This command kills you.", (args, player) -> {
@@ -96,7 +97,7 @@ public class BasicsPlugin extends Plugin{
         });
 
         handler.<Player>register("tp", "<player>", "Teleports you to player", (args, player) -> {
-            player.sendMessage(inArray(player, args[0].toLowerCase()));
+            player.sendMessage(Utils.inArray(player, args[0].toLowerCase()));
         });
     }
 }
